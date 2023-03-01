@@ -16,7 +16,7 @@ export const initDB = () => {
         // if the data object store doesn't exist, create it
         if (!db.objectStoreNames.contains(Stores.toDo)) {
           const store = db.createObjectStore(Stores.toDo, { keyPath: 'id' });
-          //store.createIndex('start', 'start', { unique: false })
+          store.createIndex('start', 'start', { unique: false })
           console.log(Stores.toDo);
         }
         // no need to resolve here

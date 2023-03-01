@@ -34,7 +34,6 @@ export const InfoPanel = () => {
     const { mainView, setMainView, dbUpdated, setDbUpdated } = useContext(MainViewContext);
     const [ editId, setEditId ] = useState();
     const [selectAll, setSelectAll] = useState([]);
-    let results = [];
 
     useEffect(() => {
       if(dbUpdated === true) {
