@@ -1,10 +1,9 @@
 import { createContext, useState } from "react"
 import { SideBar } from "../../components/sideBar/SideBar";
-import { CreateToDo, Edit, Delete  } from "../../components/todo/Create";
 import { InfoPanel } from "../../components/infoPanel/infoPanel";
 import "./main.scss";
 
-export const MainViewContext = createContext({
+export const mainContext = createContext({
     mainView: "default",
     setMainView: () => {},
     dbUpdated: true,
@@ -22,10 +21,10 @@ export const Main = () => {
 
     return (
         <div className="main" >
-            <MainViewContext.Provider value={{mainView, setMainView, dbUpdated, setDbUpdated, editValues, setEditValues}}>
+            <mainContext.Provider value={{mainView, setMainView, dbUpdated, setDbUpdated, editValues, setEditValues}}>
                 <SideBar />
                 <InfoPanel/>
-            </MainViewContext.Provider>
+            </mainContext.Provider>
         </div>
     )
 }

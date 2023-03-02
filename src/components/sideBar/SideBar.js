@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import 'react-calendar/dist/Calendar.css';
-import { MainViewContext } from "../../pages/home/Main";
+import { mainContext } from "../../pages/home/Main";
 import { format } from 'date-fns';
 import { findByDate } from "../db/dbQueries";
 
@@ -8,7 +8,7 @@ import './sideBar.scss';
 
 export const SideBar = () => {
 
-    const { setMainView, dbUpdated, editValues, setEditValues } = useContext(MainViewContext);
+    const { setMainView, dbUpdated, editValues, setEditValues } = useContext(mainContext);
 
     const today = new Date();
 

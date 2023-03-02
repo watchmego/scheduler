@@ -1,13 +1,10 @@
 import { AppBar, Toolbar } from "@mui/material";
 import React from "react";
+import './header.scss';
 
 export function Header() {
 
     return (
-        <AppBar>
-            <Toolbar>
-                ToDo App
-            </Toolbar>
-        </AppBar>
+        <h1 className="header">Scheduler</h1>
     )
 }

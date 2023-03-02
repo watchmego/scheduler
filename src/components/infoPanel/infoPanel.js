@@ -3,15 +3,11 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import { format, parse, startOfWeek, getDay, add } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { MainViewContext } from "../../pages/home/Main";
+import { mainContext } from "../../pages/home/Main";
 import { CreateToDo } from "../todo/Create";
 import { EditToDo } from "../todo/Edit";
 import { getRecords } from "../db/dbQueries";
 import "./infoPanel.scss"
-import {
-    Box,
-    Button,
-} from "@mui/material";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const locales = {
@@ -31,23 +27,30 @@ const localizer = dateFnsLocalizer({
 export const InfoPanel = () => {
     
 
-    const { mainView, setMainView, dbUpdated, setDbUpdated, editValues, setEditValues } = useContext(MainViewContext);
-    
+    const { mainView, setMainView, dbUpdated, setDbUpdated, setEditValues } = useContext(mainContext);
+     
+    const [view, setView] = useState("month");
     const [selectAll, setSelectAll] = useState([]);
 
     useEffect(() => {
       if(dbUpdated === true) {
-        getRecords().then(function(result) {setSelectAll(result); console.log('wtf',selectAll);});
+        getRecords()
+          .then(function(result) {
+            setSelectAll(result);
+          });
       }
       setDbUpdated(false);
     },[dbUpdated]);
     
-    const OnSelectEvent = useCallback((id) => {
+    const onSelectEvent = useCallback((id) => {
       setEditValues(id);
       setMainView("Edit");
     }, [])
 
-    const [view, setView] = useState("month");
+    const onView = useCallback((newView) => {
+      setView(newView)
+    });
+
 
 
     return (
@@ -60,9 +63,9 @@ export const InfoPanel = () => {
                 localizer={localizer}
                 defaultDate={new Date()}
                 events={selectAll}
-                onSelectEvent={OnSelectEvent}
+                onSelectEvent={onSelectEvent}
                 style={{ height: "100vh" }}
-                onView={(newView)=>{setView(newView)}}
+                onView={onView}
                 view={view}
               />
             </div>}

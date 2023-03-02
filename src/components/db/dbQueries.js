@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Stores } from "../db/initDb";
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
-import { MainViewContext } from '../../pages/home/Main';
+import { mainContext } from '../../pages/home/Main';
 import { initDB } from '../db/initDb';
 import { format } from 'date-fns';
 
@@ -27,7 +27,8 @@ export const findByDate = async (date) => {
             // const index = store.index('start');
             return('dbprom',dbPromise
             .then(async (db) => {
-                const date = IDBKeyRange.only(format(new Date(), 'dd/MM/yyyy'));
+                // const date = IDBKeyRange.only(format(new Date(), 'dd/MM/yyyy'));
+                if (!date) {const date = IDBKeyRange.only(new Date())};
                 const store = db.transaction(Stores.toDo, 'readwrite').objectStore(Stores.toDo);
                 console.log('separation')
                 const index = store.index('start', 'next');
@@ -50,9 +51,10 @@ export const Write = (values) => {
             const store = db.transaction(Stores.toDo, 'readwrite').objectStore(Stores.toDo);
             store.openCursor(null, 'prev')
             .then((cursor) => {
+                
                 const id = cursor ? cursor.value.id + 1 : 1;
-                const start = format(values.start, 'dd/MM/yyyy');
-                const data = {...values, start: start, end: start, id: id};
+                //const start = format(values.start, 'dd/MM/yyyy');
+                const data = {title: values.title, start: values.start, end: values.end, id: id};
                 store.add({id: id, ...data})
         })
         }))
