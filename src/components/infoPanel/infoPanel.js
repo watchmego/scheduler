@@ -6,7 +6,7 @@ import { enUS } from 'date-fns/locale'
 import { MainViewContext } from "../../pages/home/Main";
 import { CreateToDo } from "../todo/Create";
 import { EditToDo } from "../todo/Edit";
-import { Select } from "../db/dbQueries";
+import { getRecords } from "../db/dbQueries";
 import "./infoPanel.scss"
 import {
     Box,
@@ -31,35 +31,39 @@ const localizer = dateFnsLocalizer({
 export const InfoPanel = () => {
     
 
-    const { mainView, setMainView, dbUpdated, setDbUpdated } = useContext(MainViewContext);
-    const [ editId, setEditId ] = useState();
+    const { mainView, setMainView, dbUpdated, setDbUpdated, editValues, setEditValues } = useContext(MainViewContext);
+    
     const [selectAll, setSelectAll] = useState([]);
 
     useEffect(() => {
       if(dbUpdated === true) {
-      Select().then(function(result) {setSelectAll(result); console.log('wtf',selectAll);});
+        getRecords().then(function(result) {setSelectAll(result); console.log('wtf',selectAll);});
       }
       setDbUpdated(false);
     },[dbUpdated]);
     
     const OnSelectEvent = useCallback((id) => {
-      setEditId(id);
+      setEditValues(id);
       setMainView("Edit");
     }, [])
+
+    const [view, setView] = useState("month");
+
 
     return (
         <div className="infoPanel">
             {mainView === "Create" && <CreateToDo />}
-            {mainView === "Edit" && <EditToDo id={editId}/>}
+            {mainView === "Edit" && <EditToDo />}
             {mainView === "default" &&          
             <div>
               <Calendar
                 localizer={localizer}
                 defaultDate={new Date()}
-                defaultView="month"
                 events={selectAll}
                 onSelectEvent={OnSelectEvent}
                 style={{ height: "100vh" }}
+                onView={(newView)=>{setView(newView)}}
+                view={view}
               />
             </div>}
         </div>

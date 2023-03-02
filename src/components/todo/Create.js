@@ -1,8 +1,10 @@
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import React, { useEffect, useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { format, parseISO } from 'date-fns';
+import {enNZ} from 'date-fns/locale';
 import {
   Box,
   Button,
@@ -24,7 +26,7 @@ const formFields = {
     title: "",
     description: "", 
     priority: 2,
-    start: format(new Date(), 'yyyy-MM-dd'),
+    start: new Date(),
 };    
 
 const priority = [
@@ -41,7 +43,6 @@ export const CreateToDo = () => {
         values: formFields,
         mode: 'onChange'
     });
-
     const { mainView, setMainView, setDbUpdated} = useContext(MainViewContext);
 
     const [ deadlineDate, setDeadlineDate ] = useState(new Date())
@@ -73,6 +74,7 @@ export const CreateToDo = () => {
     const submitForm = (values) => {
 
         //submit todo to indexedDB
+        console.log(values);
         Write(values);
         setDbUpdated(true);
         setMainView('default');
@@ -140,11 +142,11 @@ export const CreateToDo = () => {
                     control={control}
                     // rules={validationRules.deadline}
                     render={({ field, fieldState }) => (
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} >
                             <DatePicker
                                 {...field}
                                 label="Deadline"
-                                inputFormat="yyyy/MM/dd"
+                                inputFormat="dd/MM/yyyy"
                                 renderInput={(params) => (
                                 <TextField
                                     {...params}

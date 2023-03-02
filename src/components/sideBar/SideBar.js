@@ -1,20 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import 'react-calendar/dist/Calendar.css';
 import { MainViewContext } from "../../pages/home/Main";
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { findByDate } from "../db/dbQueries";
 
 import './sideBar.scss';
 
 export const SideBar = () => {
 
-    const { mainView, setMainView, dbUpdated } = useContext(MainViewContext);
+    const { setMainView, dbUpdated, editValues, setEditValues } = useContext(MainViewContext);
 
-    const today = format(new Date(), 'yyyy-MM-dd');
+    const today = new Date();
+
     const [toDoToday, setToDoToday] = useState()
     useEffect(() => {
-            findByDate("2023-03-01")
+            findByDate(today)
                 .then((result) => {
+                    console.log(today);
                     console.log(result);
                     setToDoToday(result);
                     // do something with toDoToday
@@ -25,7 +27,10 @@ export const SideBar = () => {
                 });
       },[dbUpdated]);
 
-
+      const OnSelectEvent = useCallback((id) => {
+        setEditValues(id);
+        setMainView("Edit");
+      }, [])
 
     return (
         <div className="sideBar">
@@ -38,9 +43,10 @@ export const SideBar = () => {
                 <ul >
                     {toDoToday && toDoToday.map((item) => {
                         return(
-                            <li
-                                key={item[1].id}
-                                value={item}>{item[1].title}
+                            <li key={item[1].id} value={item}>
+                                <button onClick={() => OnSelectEvent(item[1])}>
+                                    {item[1].title}
+                                </button>
                             </li>
                         )}
                     )}

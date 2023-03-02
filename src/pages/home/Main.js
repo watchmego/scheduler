@@ -6,9 +6,11 @@ import "./main.scss";
 
 export const MainViewContext = createContext({
     mainView: "default",
-    setMainView: () => "",
+    setMainView: () => {},
     dbUpdated: true,
-    setDbUpdated: () => "",
+    setDbUpdated: () => {},
+    editValues: null,
+    setEditValues: () => {},
 
 });
 
@@ -16,10 +18,11 @@ export const Main = () => {
 
     const [ mainView, setMainView ] = useState('default');
     const [ dbUpdated, setDbUpdated] = useState(true);
+    const [ editValues, setEditValues ] = useState(null);
 
     return (
         <div className="main" >
-            <MainViewContext.Provider value={{mainView, setMainView, dbUpdated, setDbUpdated}}>
+            <MainViewContext.Provider value={{mainView, setMainView, dbUpdated, setDbUpdated, editValues, setEditValues}}>
                 <SideBar />
                 <InfoPanel/>
             </MainViewContext.Provider>

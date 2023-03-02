@@ -7,13 +7,16 @@ import { format } from 'date-fns';
 
 const dbPromise = initDB().then(() => openDB('toDoDB', 1))
 
-export const Select = (id) => {
-    
-
+export const getRecords = (id) => {
+    let result;
     return('dbprom',dbPromise
         .then(function (db) {
             const store = db.transaction(Stores.toDo).objectStore(Stores.toDo);
-            const result = store.getAll();
+            if(id) {
+                result = store.get(id)
+            } else {
+                result = store.getAll();
+            }
             return result;
         }))
 
@@ -24,7 +27,7 @@ export const findByDate = async (date) => {
             // const index = store.index('start');
             return('dbprom',dbPromise
             .then(async (db) => {
-                const date = IDBKeyRange.only(format(new Date(), 'yyyy-MM-dd'));
+                const date = IDBKeyRange.only(format(new Date(), 'dd/MM/yyyy'));
                 const store = db.transaction(Stores.toDo, 'readwrite').objectStore(Stores.toDo);
                 console.log('separation')
                 const index = store.index('start', 'next');
@@ -47,9 +50,9 @@ export const Write = (values) => {
             const store = db.transaction(Stores.toDo, 'readwrite').objectStore(Stores.toDo);
             store.openCursor(null, 'prev')
             .then((cursor) => {
-                console.log('getting cursor',cursor);
                 const id = cursor ? cursor.value.id + 1 : 1;
-                const data = {...values, end: values.start, id: id};
+                const start = format(values.start, 'dd/MM/yyyy');
+                const data = {...values, start: start, end: start, id: id};
                 store.add({id: id, ...data})
         })
         }))
